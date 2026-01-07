@@ -50,6 +50,7 @@ export async function syncEipChanges() {
 
     // Mark latest SHA AFTER successful notifications
     const statusEvents = changes.events.filter((e) => e.kind === 'status');
+    let allNotificationsSucceeded = true;
     for (const sub of groupSubs) {
       const relevant =
         sub.filter === 'status' ? statusEvents : changes.events.filter((e) => sub.filter === 'all' || e.kind === 'status');
@@ -70,6 +71,7 @@ export async function syncEipChanges() {
         console.log(`✅ Notified ${sub.email} (${relevant.length} events)`);
       } catch (err) {
         console.error(`❌ Email failed for ${sub.email}`, err);
+        allNotificationsSucceeded = false;
       }
     }
 
@@ -95,8 +97,12 @@ export async function syncEipChanges() {
       console.error('❌ RSS generation failed', err);
     }
 
-    if (changes.latestSha) {
+    if (changes.latestSha && allNotificationsSucceeded) {
       await setLastProcessedSha(key.type, key.id, changes.latestSha);
+    } else if (changes.latestSha && !allNotificationsSucceeded) {
+      console.warn(
+        `⚠️ Skipping lastSha update for ${key.type}-${key.id} because some notifications failed.`
+      );
     }
   }
 }
