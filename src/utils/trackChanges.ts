@@ -116,7 +116,10 @@ export async function getChangesSince(params: GetChangesParams): Promise<{ event
     const newStatus = extractStatus(content);
 
     // Status change?
-    if (newStatus && prevStatus && newStatus !== prevStatus) {
+    if (newStatus && newStatus !== prevStatus) {
+      const summary = prevStatus
+        ? `Status changed: ${prevStatus} → ${newStatus}`
+        : `Initial status set: ${newStatus}`;
       events.push({
         kind: 'status',
         type,
@@ -127,7 +130,7 @@ export async function getChangesSince(params: GetChangesParams): Promise<{ event
         author: commit.commit.author?.name,
         statusFrom: prevStatus,
         statusTo: newStatus,
-        summary: `Status changed: ${prevStatus} → ${newStatus}`,
+        summary,
         message: commit.commit.message,
         url: commit.html_url
       });

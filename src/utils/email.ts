@@ -23,15 +23,16 @@ export function buildChangeEmail(params: {
       : `https://eips.ethereum.org/EIPS/eip-${id}`;
 
   const rows = events
-    .map(
-      (e) => `
+    .map((e) => {
+      const statusFrom = e.statusFrom ?? 'Unknown';
+      return `
       <tr>
         <td style="padding:8px 12px;font-size:14px;">
           <strong>${e.kind === 'status' ? 'Status' : 'Content'}</strong>
         </td>
         <td style="padding:8px 12px;font-size:14px;">
-          ${e.kind === 'status' && e.statusFrom && e.statusTo
-            ? `<span style="background:#eef;padding:2px 6px;border-radius:4px;">${e.statusFrom}</span>
+          ${e.kind === 'status' && e.statusTo
+            ? `<span style="background:#eef;padding:2px 6px;border-radius:4px;">${statusFrom}</span>
                &rarr;
                <span style="background:#e6ffe6;padding:2px 6px;border-radius:4px;">${e.statusTo}</span>`
             : e.summary}
@@ -41,8 +42,8 @@ export function buildChangeEmail(params: {
           </div>
         </td>
       </tr>
-    `
-    )
+    `;
+    })
     .join('');
 
   const html = `
@@ -77,11 +78,13 @@ export function buildChangeEmail(params: {
   const text = [
     `${title}`,
     '',
-    ...events.map((e) =>
-      e.kind === 'status' && e.statusFrom && e.statusTo
-        ? `STATUS: ${e.statusFrom} -> ${e.statusTo} (${e.url})`
-        : `CONTENT: ${e.summary} (${e.url})`
-    ),
+    ...events.map((e) => {
+      if (e.kind === 'status' && e.statusTo) {
+        const statusFrom = e.statusFrom ?? 'Unknown';
+        return `STATUS: ${statusFrom} -> ${e.statusTo} (${e.url})`;
+      }
+      return `CONTENT: ${e.summary} (${e.url})`;
+    }),
     '',
     `More: ${baseLink}`
   ].join('\n');
