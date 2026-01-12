@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const client = await connectToDatabase();
     const db = client.db('eipsinsight');
 
-    await db.collection('subscriptions').deleteOne({ email, type, id, filter });
+    await db.collection('subscriptions').deleteOne({ email, type, id: String(id), filter });
     return res.status(200).json({ success: true });
   } catch (err) {
     console.error('❌ Unsubscribe error:', err);

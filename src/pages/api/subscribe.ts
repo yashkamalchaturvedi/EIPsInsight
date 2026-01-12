@@ -63,6 +63,6 @@ async function checkExistingSubscription(
   return await db.collection('subscriptions').findOne({ 
     email, 
     type, 
-    id 
+    id: String(id)
   });
 }

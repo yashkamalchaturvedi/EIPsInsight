@@ -10,9 +10,10 @@ export interface SubscriptionInput {
 export async function addSubscription({ email, type, id, filter }: SubscriptionInput) {
   const client = await connectToDatabase();
   const db = client.db('eipsinsight');
+  const normalizedId = String(id);
   await db.collection('subscriptions').updateOne(
-    { email, type, id, filter },
-    { $setOnInsert: { email, type, id, filter, createdAt: new Date() } },
+    { email, type, id: normalizedId, filter },
+    { $setOnInsert: { email, type, id: normalizedId, filter, createdAt: new Date() } },
     { upsert: true }
   );
 }
@@ -26,7 +27,7 @@ export async function getAllSubscriptions() {
 export async function checkSubscriptionExists(email: string, type: string, id: string) {
   const client = await connectToDatabase();
   const db = client.db('eipsinsight');
-  return await db.collection('subscriptions').findOne({ email, type, id });
+  return await db.collection('subscriptions').findOne({ email, type, id: String(id) });
 }
 
 // State tracking (last processed commit per (type,id))
