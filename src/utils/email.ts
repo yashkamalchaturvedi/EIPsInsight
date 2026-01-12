@@ -24,18 +24,23 @@ export function buildChangeEmail(params: {
 
   const rows = events
     .map((e) => {
-      const statusFrom = e.statusFrom ?? 'Unknown';
+      const statusFrom = e.statusFrom;
+      const statusDetails =
+        e.kind === 'status' && e.statusTo
+          ? statusFrom
+            ? `<span style="background:#eef;padding:2px 6px;border-radius:4px;">${statusFrom}</span>
+               &rarr;
+               <span style="background:#e6ffe6;padding:2px 6px;border-radius:4px;">${e.statusTo}</span>`
+            : `<span style="background:#e6ffe6;padding:2px 6px;border-radius:4px;">${e.statusTo}</span>
+               <span style="color:#64748b;font-size:12px;margin-left:6px;">(initial status)</span>`
+          : e.summary;
       return `
       <tr>
         <td style="padding:8px 12px;font-size:14px;">
           <strong>${e.kind === 'status' ? 'Status' : 'Content'}</strong>
         </td>
         <td style="padding:8px 12px;font-size:14px;">
-          ${e.kind === 'status' && e.statusTo
-            ? `<span style="background:#eef;padding:2px 6px;border-radius:4px;">${statusFrom}</span>
-               &rarr;
-               <span style="background:#e6ffe6;padding:2px 6px;border-radius:4px;">${e.statusTo}</span>`
-            : e.summary}
+          ${statusDetails}
           <div style="color:#555;margin-top:4px;">
             <a href="${e.url}" style="color:#2563eb;text-decoration:none;">Commit</a>
             ${e.author ? ` • ${e.author}` : ''} • ${new Date(e.date).toLocaleString()}
@@ -80,8 +85,10 @@ export function buildChangeEmail(params: {
     '',
     ...events.map((e) => {
       if (e.kind === 'status' && e.statusTo) {
-        const statusFrom = e.statusFrom ?? 'Unknown';
-        return `STATUS: ${statusFrom} -> ${e.statusTo} (${e.url})`;
+        if (e.statusFrom) {
+          return `STATUS: ${e.statusFrom} -> ${e.statusTo} (${e.url})`;
+        }
+        return `STATUS: ${e.statusTo} (initial status) (${e.url})`;
       }
       return `CONTENT: ${e.summary} (${e.url})`;
     }),
