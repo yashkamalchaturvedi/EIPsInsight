@@ -1,59 +1,70 @@
-
 # EIPs Insight
 
-Welcome to the Ethereum Improvement Proposals (EIPs) Insight! This project aims to provide a user-friendly website that offers insights into Ethereum Improvement Proposals (EIPs) while also covering the contents of the official [ethereum/EIPs](https://github.com/ethereum/EIPs) repository. EIPs are design documents that provide information about new features, standards, and protocols for the Ethereum platform.
+EIPs Insight is a Next.js application for browsing and exploring Ethereum Improvement Proposals (EIPs). It aggregates EIP metadata, provides searchable and filterable views, and links back to the official discussions and source documents.
 
-# Project Overview
+## Project Overview
 
-The Ethereum Improvement Proposals Insight serves as a central hub for browsing and exploring the various EIPs that have been proposed for Ethereum. The website offers features such as:
+Key features include:
 
-- A searchable and filterable list of EIPs.
-- Detailed information about each EIP, including its status, author, and description.
-- Categorized view of EIPs based on their types and status.
-- Links to the official repository and EIP discussions for further engagement.
+- Searchable, filterable lists of EIPs.
+- Detail views with status, author, and description metadata.
+- Categorized browsing by type and status.
+- Links to official repositories and discussion threads.
 
+## Quick Start
 
-# How to Contribute
+### Prerequisites
 
-We welcome contributions from the community to enhance and improve the Ethereum Improvement Proposals Explorer. If you're interested in contributing, here's how you can get started:
+- Node.js `>=18`
+- npm `>=8`
 
-## 1. Clone the Repository
-First, clone this repository to your local machine using the following command:
-
-
-```bash
-git clone https://github.com/Avarch-org/EIPUI
-```
-
-## 2. Set Up the Development Environment
-Navigate to the project directory and install the required dependencies:
+### Install and run
 
 ```bash
-cd EIPUI
+git clone https://github.com/AvarchLLC/EIPsInsight.git
+cd EIPsInsight
 npm install
 npm run dev
 ```
-## 3. Make Your Contributions
-You can contribute in various ways, such as:
 
-- Adding new features to the website.
-- Enhancing the user interface and user experience.
-- Improving the EIP data fetching and processing.
-- Fixing bugs and issues.
-Feel free to explore the codebase and open a pull request with your changes. Make sure to provide a clear description of your changes and their purpose.
+The app will be available at `http://localhost:3000`.
 
-## 4. Submitting Pull Requests
-When you're ready to submit your changes, follow these steps:
+## Environment Variables
 
-1) Fork the main repository to your GitHub account.
-2) Commit your changes to your forked repository.
-3) Open a pull request from your fork to the main repository.
-4) Provide a detailed description of your changes in the pull request.
+Copy `.env.example` to `.env.local` and fill in the values you need. The app can run with minimal configuration for basic browsing, but API-backed features (auth, analytics, email, payments) require additional secrets.
 
-# Deployment with Vercel
+```bash
+cp .env.example .env.local
+```
 
-The Ethereum Improvement Proposals Insight is deployed using Vercel for seamless hosting and continuous deployment. The deployment process is automated through GitHub integration. When changes are pushed to the main branch, Vercel automatically builds and deploys the updated website.
+See `docs/NEWCOMER_GUIDE.md` for details on required vs optional variables and where they are used.
 
+## Useful Scripts
+
+- `npm run dev` — start the local dev server.
+- `npm run build` — build for production.
+- `npm run start` — run the production build locally.
+- `npm run lint` — run Next.js linting.
+- `npm run test` — run Node test runner against `tests/**/*.test.ts`.
+- `npm run create-admin` — provision an admin user.
+- `npm run migrate-blogs` — migrate static blog content.
+
+## Repo Tour
+
+- `src/app/` — App Router entry points (`layout.tsx`, global styles, error pages).
+- `src/pages/` — Pages Router routes (legacy and feature-rich pages).
+- `src/components/` — shared UI components.
+- `src/services/` + `src/models/` — data fetching and domain models.
+- `src/stores/` — app state management.
+- `src/hooks/`, `src/utils/`, `src/lib/` — reusable hooks and utilities.
+
+## Contributing
+
+Please read `CONTRIBUTE.md` for branch strategy, workflow, and PR guidelines.
+
+## Deployment
+
+Deployments are handled via Vercel for preview builds and an NGINX-backed production environment. See `CONTRIBUTE.md` for branch routing and release flow.
 
 ## Contributors
 
@@ -65,6 +76,4 @@ The Ethereum Improvement Proposals Insight is deployed using Vercel for seamless
 
 ---
 
-Thank you for your interest in the Ethereum Improvement Proposals Insight. Let's work together to make Ethereum even better through collaborative development and insightful proposals. If you have any questions or need assistance, feel free to open an issue or reach out to us.
-
-Happy build! 🚀🌐
+Thanks for helping improve the EIPs Insight ecosystem. If you run into issues, open an issue with reproduction steps or reach out to the maintainers.

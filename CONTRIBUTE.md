@@ -1,99 +1,84 @@
-# 🧠 Contributing to EIPsInsight
+# Contributing to EIPs Insight
 
-Thank you for your interest in contributing to EIPsInsight! This guide will help you understand how our development workflow is set up and how you can contribute effectively while avoiding common pitfalls like merge conflicts.
+Thanks for your interest in contributing to EIPs Insight! This guide describes the branch strategy, workflow, and expectations for pull requests so new contributors and long-term maintainers can stay aligned.
 
+## Repository Workflow
 
-## 🏗️ Repository Structure & Deployment
+### `dev` branch (preview/staging)
+- All new work lands in `dev`.
+- Vercel preview deployments run from `dev` for testing and review.
 
-### 🔹 `dev` Branch
-- **Purpose:** All new features, bug fixes, and changes should be pushed to the `dev` branch.
-- **Use Case:** This acts as our **preview/staging** environment where we test all updates before pushing them live.
+### `main` branch (production)
+- Only maintainers merge into `main`.
+- `main` is deployed to the production NGINX server at https://eipsinsight.com.
 
-### 🔸 `main` Branch
-- **Purpose:** Production-ready, stable version of the project.
-- **Deployment:** Hosted on our NGINX server (https://eipsinsight.com).
-- **Use Case:** We only merge to `main` after thoroughly testing on `dev`.
+## Contribution Steps
 
+1. **Fork the repository**
+   Use the GitHub UI to create your fork.
 
-## 🛠️ How to Contribute
+2. **Clone your fork**
 
-### 1. Fork the Repository
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/EIPsInsight.git
+   cd EIPsInsight
+   ```
 
-Click the `Fork` button on the top right of this page to create your own copy.
+3. **Add the upstream remote**
 
-### 2. Clone Your Fork
+   ```bash
+   git remote add upstream https://github.com/AvarchLLC/EIPsInsight.git
+   ```
 
-```bash
-git clone https://github.com/YOUR_USERNAME/eipsinsight.git
-cd eipsinsight
-````
+4. **Create a feature branch**
 
-### 3. Add the Original Repository as Remote
+   ```bash
+   git checkout -b feat/your-feature-name
+   ```
 
-```bash
-git remote add upstream https://github.com/AvarchLLC/EIPsInsight.git
-```
+5. **Sync with upstream `dev`**
 
-### 4. Create a Feature Branch
+   ```bash
+   git fetch upstream
+   git checkout dev
+   git merge upstream/dev
+   ```
 
-**Never** work directly on the `dev` or `main` branch in your fork.
+6. **Bring changes into your feature branch**
 
-```bash
-git checkout -b feat/your-feature-name
-```
+   ```bash
+   git checkout feat/your-feature-name
+   git merge dev
+   # or
+   git rebase dev
+   ```
 
-### 5. Sync with Upstream `dev` Branch
+7. **Make changes and test locally**
 
-Before you begin making changes, make sure your local fork is up to date:
+   ```bash
+   npm install
+   npm run dev
+   ```
 
-```bash
-git fetch upstream
-git checkout dev
-git merge upstream/dev
-```
+8. **Push to your fork and open a PR**
 
-### 6. Rebase or Merge into Your Feature Branch
+   ```bash
+   git push origin feat/your-feature-name
+   ```
 
-```bash
-git checkout feat/your-feature-name
-git merge dev
-# or
-git rebase dev
-```
+   - Open the PR against `AvarchLLC/EIPsInsight` **`dev`**, not `main`.
+   - Include a clear title, summary, and screenshots for UI changes.
 
-**🔧 If there are any merge conflicts, resolve them locally in your editor.**
+## Review and Release
 
-### 7. Push to Your Fork
+- Maintainers review changes on the `dev` preview build.
+- Once validated, maintainers merge into `main` and publish to production.
 
-```bash
-git push origin feat/your-feature-name
-```
+## Tips for Long-Term Maintenance
 
-### 8. Create a Pull Request
+- Keep PRs small and focused.
+- Rebase frequently to avoid drift from `dev`.
+- Document new scripts, environment variables, or data flows in `docs/NEWCOMER_GUIDE.md`.
+- Add or update tests when touching data logic or critical components.
 
-* Go to your fork on GitHub
-* Click "Compare & Pull Request"
-* Make sure the base branch is `Avarch/dev` (NOT `main`)
-* Provide a clear title and description
-
-
-## ✅ What Happens After Your PR
-
-* We’ll review your PR and test it on the `dev` Vercel deployment.
-* Once it’s verified, **maintainers will handle merging into `main`** for production deployment via the NGINX server.
-
-
-
-## 🧩 Tips to Avoid Merge Conflicts
-
-* Regularly pull updates from the upstream `dev` branch.
-* Never submit PRs from outdated forks — always sync and rebase.
-* Keep your PRs small and focused — one feature or fix per PR.
-* Don’t push to `dev` or `main` directly from your fork.
-
-## 🙌 Thank You
-
-Your contributions help us improve the EIPsInsight ecosystem and provide more value to the Ethereum community. We appreciate every PR — whether it's fixing a typo or adding a new feature!
-
-Feel free to raise issues or ask questions if you get stuck.
-
+Thanks again for helping improve the EIPs Insight ecosystem!
